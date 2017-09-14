@@ -71,7 +71,7 @@ public class Ball : MonoBehaviour {
         BallLauncher.spikesHit = true;
 		AudioSource.PlayClipAtPoint(spikes, Vector3.zero, GameManager.spikesVolume);
 
-		if (GameManager.levelsCompleted < 10)
+		if (GameManager.levelsCompleted < 12)
 			GameManager.levelsCompleted += 0.2f;
     }
 }

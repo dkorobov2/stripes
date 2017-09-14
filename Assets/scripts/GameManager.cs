@@ -61,13 +61,13 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		/*
-		if (BallLauncher.level > maxLevel)
-        {
-            gameData.maxLevel = BallLauncher.level;
-            Save();
-        }
-        */
+		if (Input.GetKeyDown(KeyCode.Escape)) {
+			string scene = SceneManager.GetActiveScene ().name;
+			if (scene == "start" || scene == "menu")
+				Application.Quit();
+			else
+				SceneManager.LoadScene("menu");
+		}
 	}
 
     public static void updateData(int level)

@@ -67,6 +67,7 @@ public class Settings : MonoBehaviour {
 			audioSource.Play ();
 			//StartCoroutine (waitForClick(button));
 		}
+			
 	}
 
 	IEnumerator waitForClick(string sceneName)

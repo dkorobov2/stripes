@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
 public class LevelSelect : MonoBehaviour {
 
     public GameObject levelPrefab;
@@ -57,6 +57,5 @@ public class LevelSelect : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
 	}
 }

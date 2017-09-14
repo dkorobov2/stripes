@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-//using GoogleMobileAds.Api;
 using UnityEngine.Advertisements;
 
 public class BallLauncher : MonoBehaviour
@@ -55,9 +54,9 @@ public class BallLauncher : MonoBehaviour
 		GameManager.updateData (level);
 
 		// show ad
-		if (GameManager.levelsCompleted > 10) {
+		if (GameManager.levelsCompleted > 12) {
 			Advertisement.Show ();
-			GameManager.levelsCompleted -= 10;
+			GameManager.levelsCompleted -= 12;
 			Debug.Log ("ad showing");
 		}
 	}
