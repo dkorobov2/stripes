@@ -8,8 +8,6 @@ public class Transition : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-		//if (GameManager.fade == true) {
 		Instantiate (transition, Vector3.zero, Quaternion.identity, gameObject.transform.parent);
-		//}
 	}
 }

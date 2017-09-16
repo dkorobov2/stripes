@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour {
 	public static float popVolume = 1.0f;
 
 	public static float levelsCompleted;
+	public static float levelsBeforeAd = 15.0f;
 
 	//public static bool fade;
 
@@ -38,8 +39,6 @@ public class GameManager : MonoBehaviour {
         //gameObject.GetComponent<AudioListener>().enabled = true;
 		//fade = true;
         Load();
-
-		AudioListener.pause = !sound;
 
         if (maxLevel == 0)
         {
@@ -54,6 +53,7 @@ public class GameManager : MonoBehaviour {
             Save();
         }
 
+		AudioListener.pause = !sound;
 		Advertisement.Initialize ("1512965", false);
 
         //maxLevel = stripesData.maxLevel;

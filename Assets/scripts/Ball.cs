@@ -18,11 +18,6 @@ public class Ball : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        //Vector3 pos = ball.position;
-        //pos.x = Mathf.Clamp(pos.x, Walls.leftBarrier, Walls.rightBarrier);
-        //pos.y = Mathf.Clamp(pos.y, Walls.bottomBarrier, Walls.topBarrier);
-        //ball.position = pos;
-
         if (destroyBall)
         {
             fadeBall();
@@ -71,7 +66,7 @@ public class Ball : MonoBehaviour {
         BallLauncher.spikesHit = true;
 		AudioSource.PlayClipAtPoint(spikes, Vector3.zero, GameManager.spikesVolume);
 
-		if (GameManager.levelsCompleted < 12)
-			GameManager.levelsCompleted += 0.2f;
+		if (GameManager.levelsCompleted < GameManager.levelsBeforeAd)
+			GameManager.levelsCompleted += 0.1f;
     }
 }

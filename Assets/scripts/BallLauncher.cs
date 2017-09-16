@@ -54,9 +54,9 @@ public class BallLauncher : MonoBehaviour
 		GameManager.updateData (level);
 
 		// show ad
-		if (GameManager.levelsCompleted > 12) {
+		if (GameManager.levelsCompleted > GameManager.levelsBeforeAd) {
 			Advertisement.Show ();
-			GameManager.levelsCompleted -= 12;
+			GameManager.levelsCompleted -= GameManager.levelsBeforeAd;
 			Debug.Log ("ad showing");
 		}
 	}

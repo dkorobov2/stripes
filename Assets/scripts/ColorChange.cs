@@ -102,7 +102,7 @@ public class ColorChange : MonoBehaviour {
 
 				timeDelayReset -= Time.deltaTime;
 			} else {
-				gameObject.GetComponent<QuickPolygon> ().SetFillUnicolor (barrierResetColorB);
+				gameObject.GetComponent<QuickPolygon> ().SetFillUnicolor (barrierResetColorB, true);
 				reset = false;
 			}
 		}	
@@ -135,7 +135,7 @@ public class ColorChange : MonoBehaviour {
 
 				timeDelayFade -= Time.deltaTime;
 			} else {
-				gameObject.GetComponent<QuickPolygon> ().SetFillUnicolor (barrierFadeColorB);
+				gameObject.GetComponent<QuickPolygon> ().SetFillUnicolor (barrierFadeColorB, true);
 				fade = false;
 			}
 		}
