@@ -45,10 +45,6 @@ public class BallLauncher : MonoBehaviour
 		launchedBalls = new List<GameObject>();
 
 		level = System.Convert.ToInt32(SceneManager.GetActiveScene().name);
-		//levelCleared.transform.parent.GetComponent<Animator>().enabled = false;
-		//Debug.Log("Requesting banner");
-		//RequestBanner();
-		//Debug.Log("Finished requesting banner");
 
 		GameManager.levelsCompleted++;
 		GameManager.updateData (level);
@@ -116,30 +112,35 @@ public class BallLauncher : MonoBehaviour
 				return;
 			}
 
-			//if (hit.transform == null && !EventSystem.current.IsPointerOverGameObject() && ballsLaunched == 0)
-			if (hit.transform == null && !EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId) && ballsLaunched == 0)
-			{
-				Debug.Log("launching");
+            //if (hit.transform == null && !EventSystem.current.IsPointerOverGameObject() && ballsLaunched == 0)
+            if (hit.transform == null && !EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId) && ballsLaunched == 0)
+            {
+                Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                if (pos.x > Walls.leftBarrier + 0.15f && pos.x < Walls.rightBarrier - 0.15f && pos.y < Walls.topBarrier - 0.15f && pos.y > Walls.bottomBarrier + 0.15f)
+                {
 
-				if (level == 1)
-					GameObject.Find ("tutorial").GetComponent<Animator>().enabled = true;
-				
-				mousePressed = true;
-				launchedBalls.Add(Instantiate(ball, gameObject.transform));
-				launching = true;
+                    Debug.Log("launching");
 
-				ballsLaunched++;
-				pivot = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    if (level == 1)
+                        GameObject.Find("tutorial").GetComponent<Animator>().enabled = true;
 
-				arrow.transform.position = pivot + new Vector2(0, arrowDistance);
-				//arrow.transform.position = pivot + new Vector2(0, 0);
-				arrow.transform.eulerAngles = new Vector3(0, 0, 0);
-				launchedBalls[launchedBalls.Count - 1].transform.position = new Vector3(pivot.x , pivot.y, 5);
+                    mousePressed = true;
+                    launchedBalls.Add(Instantiate(ball, gameObject.transform));
+                    launching = true;
 
-				launchedBalls[launchedBalls.Count - 1].GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                    ballsLaunched++;
+                    pivot = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-				arrow.SetActive(true);
-				launchedBalls[launchedBalls.Count - 1].SetActive(true);
+                    arrow.transform.position = pivot + new Vector2(0, arrowDistance);
+                    //arrow.transform.position = pivot + new Vector2(0, 0);
+                    arrow.transform.eulerAngles = new Vector3(0, 0, 0);
+                    launchedBalls[launchedBalls.Count - 1].transform.position = new Vector3(pivot.x, pivot.y, 5);
+
+                    launchedBalls[launchedBalls.Count - 1].GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+
+                    arrow.SetActive(true);
+                    launchedBalls[launchedBalls.Count - 1].SetActive(true);
+                }
 			}
 		}
 

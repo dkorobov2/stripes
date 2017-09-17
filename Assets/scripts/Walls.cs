@@ -24,7 +24,7 @@ public class Walls : MonoBehaviour {
     // Use this for initialization
     void Awake()
     {
-        float colliderWidth = 0.1f;
+        float colliderWidth = 0.04f;
 
         left = new GameObject();
         left.name = "left";
@@ -56,7 +56,7 @@ public class Walls : MonoBehaviour {
         bottom.transform.parent = this.transform;
         bottomWall = bottom.AddComponent<BoxCollider2D>();
         bottomWall.transform.position = (bottomLeft+bottomRight)/2;
-        bottomWall.transform.localScale = new Vector3(bottomRight.x - bottomLeft.x, colliderWidth, 1);
+        bottomWall.transform.localScale = new Vector3(bottomRight.x - bottomLeft.x, colliderWidth * 2, 1);
         bottomWall.sharedMaterial = bounceMaterial;
 
         // top wall
@@ -65,21 +65,21 @@ public class Walls : MonoBehaviour {
         topWall.transform.position = (topLeft + topRight) / 2;
         topWall.transform.position = new Vector3(topWall.transform.position.x, topBarrier, topWall.transform.position.z);
         //topWall.transform.position = new Vector3(topWall.transform.position.x, topBarrier, topWall.transform.position.z);
-        topWall.transform.localScale = new Vector3(topRight.x - topLeft.x, colliderWidth, 1);
+        topWall.transform.localScale = new Vector3(topRight.x - topLeft.x, colliderWidth * 2, 1);
         topWall.sharedMaterial = bounceMaterial;
 
         // left wall
         left.transform.parent = this.transform;
         leftWall = left.AddComponent<BoxCollider2D>();
         leftWall.transform.position = (topLeft + bottomLeft) / 2;
-        leftWall.transform.localScale = new Vector3(colliderWidth, bottomLeft.y - topLeft.y, 1);
+        leftWall.transform.localScale = new Vector3(colliderWidth * 2, bottomLeft.y - topLeft.y, 1);
         leftWall.sharedMaterial = bounceMaterial;
 
         // right wall
         right.transform.parent = this.transform;
         rightWall = right.AddComponent<BoxCollider2D>();
         rightWall.transform.position = (bottomRight + topRight) / 2;
-        rightWall.transform.localScale = new Vector3(colliderWidth, bottomRight.y - topRight.y, 1);
+        rightWall.transform.localScale = new Vector3(colliderWidth * 2, bottomRight.y - topRight.y, 1);
         rightWall.sharedMaterial = bounceMaterial;
     }
 }

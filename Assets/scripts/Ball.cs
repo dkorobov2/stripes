@@ -10,10 +10,14 @@ public class Ball : MonoBehaviour {
     public static bool destroyBall;
 
     public AudioClip spikes;
+    public AudioSource audioSource;
 
 	// Use this for initialization
 	void Start () {
         ball = gameObject.GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
+        Debug.Log(GameManager.spikesVolume);
+        audioSource.volume = GameManager.spikesVolume;
     }
 	
 	// Update is called once per frame
@@ -64,7 +68,7 @@ public class Ball : MonoBehaviour {
     {
         fadeBall();
         BallLauncher.spikesHit = true;
-		AudioSource.PlayClipAtPoint(spikes, Vector3.zero, GameManager.spikesVolume);
+		audioSource.PlayOneShot(spikes);
 
 		if (GameManager.levelsCompleted < GameManager.levelsBeforeAd)
 			GameManager.levelsCompleted += 0.1f;

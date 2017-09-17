@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour {
 
     public static float clickVolume = 0.5f;
 	public static float levelVolume = 0.1f;
-	public static float spikesVolume = 0.5f;
+	public static float spikesVolume = 0.1f;
 	public static float popVolume = 1.0f;
 
 	public static float levelsCompleted;
