@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Linq;
 using UnityEngine.SceneManagement;
 using UnityEngine.Advertisements;
 
 public class BallLauncher : MonoBehaviour
 {
 	private bool mousePressed;
-	private float arrowDistance, fingerDistance;
+	private float arrowDistance, fingerDistance, fingerError;
 	private Vector2 pivot;
 	private Vector2 pausedVelocity;
 	private int ballsLaunched;
@@ -40,6 +41,7 @@ public class BallLauncher : MonoBehaviour
 		ballsLaunched = 0;
 		arrowDistance = 0.5f;
 		fingerDistance = 0;
+		fingerError = 0.06f;
 		initNumBarriers();
 
 		launchedBalls = new List<GameObject>();
@@ -112,9 +114,16 @@ public class BallLauncher : MonoBehaviour
 				return;
 			}
 
-            //if (hit.transform == null && !EventSystem.current.IsPointerOverGameObject() && ballsLaunched == 0)
-            if (hit.transform == null && !EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId) && ballsLaunched == 0)
+            //if (hit.transform == null && !EventSystem.current.IsPointerOverGameObject())
+            if (hit.transform == null && !EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
             {
+				if (launchedBalls.Count == 1) {
+					Ball deadBall = launchedBalls.Last().GetComponent<Ball> ();
+					//deadBall.resetBarriers ();
+					deadBall.deleteBall ();
+					initNumBarriers ();
+				}
+
                 Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 if (pos.x > Walls.leftBarrier + 0.15f && pos.x < Walls.rightBarrier - 0.15f && pos.y < Walls.topBarrier - 0.15f && pos.y > Walls.bottomBarrier + 0.15f)
                 {
@@ -192,6 +201,12 @@ public class BallLauncher : MonoBehaviour
 
 				arrow.SetActive(false);
 				Vector2 ballDirection = pivot - (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+				Vector2 ballDirectionNormalized = ballDirection.normalized;
+				if (ballDirectionNormalized.x <= fingerError && ballDirectionNormalized.x >= -fingerError)
+					ballDirection.x = 0;
+				if (ballDirectionNormalized.y <= fingerError && ballDirectionNormalized.y >= -fingerError)
+					ballDirection.y = 0;
+				
 				if (fingerDistance < arrowDistance/2)
 				{
 					GameObject tempBall = launchedBalls[launchedBalls.Count - 1];
@@ -201,6 +216,7 @@ public class BallLauncher : MonoBehaviour
 				}
 				else
 				{
+					Debug.Log (ballDirection.normalized);
 					launchedBalls[launchedBalls.Count - 1].GetComponent<Rigidbody2D>().AddForce(ballDirection.normalized * ballForce);
 				}
 			}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using QuickPoly;
+using System.Linq;
 using UnityEngine.SceneManagement;
 
 public class ColorChange : MonoBehaviour {
@@ -13,12 +14,15 @@ public class ColorChange : MonoBehaviour {
     private TextMesh hitsText;
     private int transitionNum, hitsInTransition;
 	private int maxHitsSaved;
-    private float transitionT;
+    private float transitionT, animationSpeed;
 
     public int maxHits;
     public GameObject hits;
 
     public AudioClip pop;
+
+	public ParticleSystem particles;
+
     //AudioSource audioSource;
 	private float timeDelayFade, timeDelayReset;
 
@@ -40,8 +44,9 @@ public class ColorChange : MonoBehaviour {
 		maxHitsSaved = maxHits;
         hitsInTransition = 5;
 
-		timeDelayFade = 1.0f;
-		timeDelayReset = 1.0f;
+		timeDelayFade = 0.5f;
+		timeDelayReset = 0.5f;
+		animationSpeed = 0.3f;
         //audioSource = GetComponent<AudioSource>();
 
 		fade = false;
@@ -49,23 +54,7 @@ public class ColorChange : MonoBehaviour {
 
 		hitsText = hits.GetComponent<TextMesh>();
 		hitsText.text = numHitsLeft.ToString();
-		/*
-		textColorA = hitsText.color;
-		textColorB = textColorA;
-		textColorB.a = 0.0f;
 
-		circle = gameObject.transform.parent.FindChild ("circle").gameObject;
-		circleInnerColorA = circle.GetComponent<QuickPolygon> ().GetFillColorA ();
-		circleInnerColorB = circleInnerColorA;
-		circleInnerColorB.a = 0.0f;
-
-		circleOuterColorA = circle.GetComponent<QuickPolygon> ().GetBorderColor ();
-		circleOuterColorB = circleOuterColorA;
-		circleOuterColorB.a = 0.0f;
-
-		innerScale = circle.GetComponent<QuickPolygon> ().GetBorderInnerScale ();
-		outerScale = circle.GetComponent<QuickPolygon> ().GetBorderOuterScale ();
-		*/
         colors = new Color[numTransitions + 1];
         //colors[0] = gameObject.GetComponent<QuickPolygon>().GetFillColorA();
         colors[4] = new Color(0.137f, 0.808f, 0.42f);
@@ -86,20 +75,16 @@ public class ColorChange : MonoBehaviour {
 		//if (reset == true && fade == false && BallLauncher.numBarriers > 0) {
 		if (reset == true && BallLauncher.numBarriers > 0) {
 			if (timeDelayReset > 0) {
-				if (timeDelayReset == 1.0f) {
-					barrierResetColorA = Color.Lerp (colors [transitionNum], colors [transitionNum - 1], transitionT);
-					barrierResetColorB = barrierResetColorA;
-					barrierResetColorA.a = 0.0f;
+				if (timeDelayReset == animationSpeed) {
+					barrierResetColorA = gameObject.GetComponent<QuickPolygon> ().GetFillColorA ();
+					barrierResetColorB = Color.Lerp (colors [transitionNum], colors [transitionNum - 1], transitionT);
 					barrierResetColorB.a = 1.0f;
 
-					gameObject.transform.parent.transform.parent.GetComponent<Animator>().SetTrigger("reset");
+					if (barrierResetColorA.a != 1.0f)
+						gameObject.transform.parent.transform.parent.GetComponent<Animator>().SetTrigger("reset");
 				}
 
-				gameObject.GetComponent<QuickPolygon> ().SetFillUnicolor (Color.Lerp (barrierResetColorB, barrierResetColorA, timeDelayReset), true);
-				//circle.GetComponent<QuickPolygon> ().SetFillUnicolor (Color.Lerp (circleInnerColorA, circleInnerColorB, timeDelayReset), true);
-				//circle.GetComponent<QuickPolygon> ().SetBorderUnicolor (Color.Lerp (circleOuterColorA, circleOuterColorB, timeDelayReset), outerScale, innerScale, true);
-				//hitsText.color = Color.Lerp (textColorA, textColorB, timeDelayReset);
-
+				gameObject.GetComponent<QuickPolygon> ().SetFillUnicolor (Color.Lerp (barrierResetColorB, barrierResetColorA, timeDelayReset/animationSpeed), true);
 				timeDelayReset -= Time.deltaTime;
 			} else {
 				gameObject.GetComponent<QuickPolygon> ().SetFillUnicolor (barrierResetColorB, true);
@@ -110,7 +95,7 @@ public class ColorChange : MonoBehaviour {
 		else if (fade == true) {
 			//Debug.Log (gameObject.GetComponent<QuickPolygon> ().GetFillColorA ());
 			if (timeDelayFade > 0) {
-				if (timeDelayFade == 1.0f) {
+				if (timeDelayFade == animationSpeed) {
 					barrierFadeColorA = gameObject.GetComponent<QuickPolygon> ().GetFillColorA ();
 					barrierFadeColorB = barrierFadeColorA;
 					barrierFadeColorA.a = 1.0f;
@@ -118,20 +103,7 @@ public class ColorChange : MonoBehaviour {
 
 					gameObject.transform.parent.transform.parent.GetComponent<Animator>().SetTrigger("fade");
 				}
-				gameObject.GetComponent<QuickPolygon> ().SetFillUnicolor (Color.Lerp (barrierFadeColorB, barrierFadeColorA, timeDelayFade), true);
-				//circle.GetComponent<QuickPolygon> ().SetFillUnicolor (Color.Lerp (circleInnerColorB, circleInnerColorA, timeDelayFade), true);
-				//circle.GetComponent<QuickPolygon> ().SetBorderUnicolor (Color.Lerp (circleOuterColorB, circleOuterColorA, timeDelayFade), outerScale, innerScale, true);
-
-				/*
-				if (circle.GetComponent<MeshRenderer> ().material.HasProperty ("_ReplaceColor")) {
-					Debug.Log ("********************************");
-				} else {
-					Debug.Log ("NOOOOO");
-				}
-				circle.GetComponent<MeshRenderer>().material.SetColor("_ReplaceColor", Color.red);
-				*/
-
-				//hitsText.color = Color.Lerp (textColorB, textColorA, timeDelayFade);
+				gameObject.GetComponent<QuickPolygon> ().SetFillUnicolor (Color.Lerp (barrierFadeColorB, barrierFadeColorA, timeDelayFade/animationSpeed), true);
 
 				timeDelayFade -= Time.deltaTime;
 			} else {
@@ -150,38 +122,49 @@ public class ColorChange : MonoBehaviour {
 
             //audioSource.PlayOneShot(pop);
 			AudioSource.PlayClipAtPoint(pop, Vector3.zero, GameManager.popVolume);
+			CameraShake.shakeDuration = 0.02f;
 
             hitsText.text = numHitsLeft.ToString();
             if (numHitsLeft == 0)
             {
+				CameraShake.shakeAmount = 0.2f;
+				CameraShake.shakeDuration = 0.4f;
+				CameraShake.decreaseFactor = 0.9f;
                 BallLauncher.numBarriers--;
                 fadeBarrier();
                 if (BallLauncher.numBarriers == 0)
                 {
                     //BallLauncher.paused = true;
-                    Ball.destroyBall = true;
+					Ball deadBall = BallLauncher.launchedBalls.Last().GetComponent<Ball> ();
+					deadBall.fadeBall ();
                 }
                 return;
             }
 
+			Ball.stripeHit = true;
             transitionNum = 1 + (maxHits - numHits - 1) / hitsInTransition;
             setTransitionT();
-            gameObject.GetComponent<QuickPolygon>().SetFillUnicolor(Color.Lerp(colors[transitionNum], colors[transitionNum - 1], transitionT), true);
+
+			Color collisionColor = Color.Lerp (colors [transitionNum], colors [transitionNum - 1], transitionT);
+            gameObject.GetComponent<QuickPolygon>().SetFillUnicolor(collisionColor, true);
+
+			var particleColor = particles.colorOverLifetime;
+			particleColor.enabled = true;
+
+			Gradient grad = new Gradient();
+			grad.SetKeys( new GradientColorKey[] { new GradientColorKey(collisionColor, 0.0f), new GradientColorKey(colors[transitionNum - 1], 1.0f) }, new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(0.0f, 1.0f) } );
+
+			particleColor.color = grad;
+			particles.transform.position = col.transform.position;
+			particles.Play ();
         }
     }
-    /*
-    IEnumerator resetLevel()
-    {
-        yield return new WaitForSeconds(1);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-    */
 
     private void fadeBarrier()
     {
         gameObject.GetComponent<Collider2D>().enabled = false;
-		timeDelayFade = 1.0f;
-		timeDelayReset = 1.0f;
+		timeDelayFade = animationSpeed;
+		timeDelayReset = animationSpeed;
 		fade = true;
 		reset = false;
     }
@@ -206,15 +189,9 @@ public class ColorChange : MonoBehaviour {
 
 		gameObject.GetComponent<Collider2D>().enabled = true;
 
-		//if (gameObject.GetComponent<QuickPolygon> ().GetFillColorA ().a < 1.0f) {
-		if (prevNumHitsLeft == 0) {
-			timeDelayFade = 1.0f;
-			timeDelayReset = 1.0f;
-			reset = true;
-			fade = false;
-		} else {
-			//Debug.Log(gameObject.GetComponent<QuickPolygon> ().GetFillColorA ().a);
-			gameObject.GetComponent<QuickPolygon>().SetFillUnicolor(Color.Lerp(colors[transitionNum], colors[transitionNum - 1], transitionT), true);
-		}
+		timeDelayFade = animationSpeed;
+		timeDelayReset = animationSpeed;
+		reset = true;
+		fade = false;
 	}
 }

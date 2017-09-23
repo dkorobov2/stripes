@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using UnityEngine.Advertisements;
 
 public class UIControl : MonoBehaviour, IPointerDownHandler {
     public GameObject pauseScreen;
@@ -60,9 +61,10 @@ public class UIControl : MonoBehaviour, IPointerDownHandler {
 
     public void resetLevel()
     {
-        audioSource.volume = GameManager.clickVolume;
+        //audioSource.volume = GameManager.clickVolume;
         audioSource.PlayOneShot(clickAudio);
-        StartCoroutine(waitForClick(SceneManager.GetActiveScene().name));
+		Advertisement.Show ();
+		StartCoroutine(waitForClick((System.Convert.ToInt32(SceneManager.GetActiveScene().name) + 1).ToString()));
     }
 
     public void loadNextLevel()
